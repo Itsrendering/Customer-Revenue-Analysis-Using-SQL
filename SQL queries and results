@@ -1,0 +1,93 @@
+Queries and Results
+1. Total Revenue
+SELECT SUM(order_total) AS total_revenue
+FROM orders;
+
+
+Result: 1166.25
+
+2. Revenue by Customer
+SELECT
+    customer_id,
+    SUM(order_total) AS total_revenue
+FROM orders
+GROUP BY customer_id
+ORDER BY total_revenue DESC;
+
+
+Result:
+
+customer_id	total_revenue
+3	450.75
+1	375.50
+2	200.00
+5	90.00
+4	50.00
+
+3. Top 5 Customers
+SELECT
+    customer_id,
+    SUM(order_total) AS total_revenue
+FROM orders
+GROUP BY customer_id
+ORDER BY total_revenue DESC
+LIMIT 5;
+
+
+Result: Same as above (all 5 customers included)
+
+4. Monthly Revenue Trend
+SELECT
+    DATE_FORMAT(order_date, '%Y-%m') AS month,
+    SUM(order_total) AS total_revenue
+FROM orders
+GROUP BY month
+ORDER BY month;
+
+
+Result:
+
+month	total_revenue
+2023-01	120.50
+2023-02	275.00
+2023-03	150.75
+2023-04	300.00
+2023-05	140.00
+2023-06	180.00
+5. New vs Returning Customers
+SELECT
+    customer_type,
+    COUNT(*) AS customer_count
+FROM (
+    SELECT
+        customer_id,
+        CASE
+            WHEN COUNT(order_id) = 1 THEN 'New'
+            ELSE 'Returning'
+        END AS customer_type
+    FROM orders
+    GROUP BY customer_id
+) AS customer_summary
+GROUP BY customer_type;
+
+
+Result:
+
+customer_type	customer_count
+New	3
+Returning	2
+Key Insights
+
+Customers 3 and 1 contribute the most revenue. Retaining these customers could be valuable.
+
+Revenue peaks in April and June, which might indicate seasonal patterns or successful promotions.
+
+Most customers (3 out of 5) are new, so there’s an opportunity to turn them into returning customers.
+
+Recommendations
+
+Focus retention efforts on high-value customers.
+
+Track monthly trends to plan marketing or sales campaigns.
+
+Consider outreach programs to convert new customers into repeat buyers.
